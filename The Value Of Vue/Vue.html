@@ -12,21 +12,27 @@
 
     <div id="app">
         <h1>{{ message }}</h1>
+        <ul class="js-items">
+            <li v-if="!items.length">Sorry, there are no items.</li>
+            <li v-for="item in items" :class="{ 'is-blue': item.includes('blue') }">
+                {{ item }}</li>
+        </ul>
     </div>
 
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
     <script>
-        //最简单的一个Vue例子
+
         var vm = new Vue({
-            el: '#app',
+            el: "#app",
             data: {
-                message: "Hello Vue!"
+                items: []
+            },
+            created(){
+                this.fetech("https://example.com/items.json")
+                    .then(res => res.json())
+                    .then(data => this.items = data.items);
             }
-        })
-
-        
-
-
+        });
     </script>
 </body>
 
