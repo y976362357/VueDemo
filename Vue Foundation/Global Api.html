@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Global API</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ message }}</h1>
+        <h1>当前Vue版本:{{ version }}</h1>
+        <p v-if="show">{{ person.name }}___{{ person.gender }}</p>
+        <p v-else>{{ person.age }}___{{ person.gender }}</p>
+
+        <p>{{ person.id | hideId }}</p>
+        <p v-color>{{ person.id  }}</p>
+    </div>
+
+    <div id="extend">
+        abcdefg
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        //自定义指令
+        Vue.directive('color', {
+            inserted: function (el) {
+                el.innerText = el.innerText.replace('1990', '****');
+                console.log(el.color)
+            },
+            update: function (el, binding) {
+            },
+            bind: function(el){
+                el.style.color = 'red';
+            }
+        });
+        
+        //自定义过滤器
+        Vue.filter('hideId', function(value){
+            return value.replace("199", '***');
+        });
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                message: "Hello Vue!",
+                //通过Vue.vresion获取当前Vue的版本
+                version: Vue.version,
+                show: true,
+                person: {
+                    //name: 'Toby'
+                    id: "332526199012190093"
+                },
+                intervals: []
+            },
+            created() {
+                var that = this;
+                setTimeout(function () {
+                    console.log(this);      //普通回调函数的this指向Window对象
+                }, 1000);
+
+                this.intervals.push(setInterval(() => {
+                    this.message = this.message.split('').reverse().join('');       //箭头函数中的this指向当前Vue实例
+                }, 2000));
+
+                this.intervals.push(setInterval(() => {
+                    this.show = !this.show;
+                    if (this.show) {
+                        //动态添加响应式属性
+                        Vue.set(this.person, 'name', 'Toby');
+                        Vue.set(this.person, 'gender', 'M');
+                        Vue.delete(this.person, 'age');
+                    } else {
+                        //动态添加响应式属性
+                        this.$delete(this.person, 'name');
+                        this.$set(this.person, 'gender', 'F');
+                        this.$set(this.person, 'age', 18);
+                    }
+                }, 3000));
+            },
+            beforeDestroy() {
+                this.intervals.forEach(i => {
+                    console.log(i);
+                    clearInterval(i);
+                });
+            }
+        });
+
+        //Vue.extend的用法
+
+        // 创建构造器
+        var Profile = Vue.extend({
+            template: `
+                        <div>
+                            <p>
+                                {{ firstName }}_{{ lastName }}
+                            </p>
+                        </div>
+                     `,
+            data: function () {
+                return {
+                    firstName: "Yang",
+                    lastName: 'Toby'
+                }
+            }
+        });
+
+        new Profile().$mount("#extend");
+
+
+    </script>
+</body>
+
+</html>
