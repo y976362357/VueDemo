@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Directives</title>
+
+    <style>
+        [v-cloak] {
+            /* display: none; */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app" v-cloak>
+
+        <section>
+            <select name="demoType" v-model="demoType">
+                <option v-for="n in 7" :key='n'>{{ n }}</option>
+            </select>
+        </section>
+
+        <section v-show='demoType == 1'>
+            <h1>v-text Demo, 使用v-once, 拒绝响应式</h1>
+            <p>{{ message }}</p>
+            <p v-once>{{ message }}：v-once</p>
+            <p v-text='message'></p>
+            <p v-once v-text='message'>v-once</p>
+            <p>{{ message.split('').reverse().join('') }}</p>
+            <p v-once>{{ message.split('').reverse().join('') }}：v-once</p>
+        </section>
+
+        <section v-show='demoType == 2'>
+            <h1>v-html 与 v-text</h1>
+            <p>{{ htmlMessage }}</p>
+            <p v-text='htmlMessage'>test</p>
+            <p v-html='htmlMessage'></p>
+            <p v-pre>使用v-pre跳过Vue的编译： {{ htmlMessage }}</p>
+        </section>
+
+        <section v-show='demoType == 3'>
+            <h1>v-bind,绑定data中的数据到html的特性上</h1>
+            <p v-bind:title='message'>hello</p>
+            <p :title='message'>缩写</p>
+            <p :title='"内容加载时间:" + new Date()'>可以是一个js的表达式</p>
+            <img :src="vueLogo.src" :alt="vueLogo.alt" style="width: 40px; height: 40px;">
+            <button :disabled="isDisabled">{{ isDisabled ? '按钮不可用' : '按钮可用' }}</button>
+            <button :disabled="Math.random() > 0.5">根据随机数确定是否可用</button>
+        </section>
+
+        <section v-show='demoType == 4'>
+            <h1>v-if于v-show</h1>
+            <p v-show='isShow'>v-show1</p>
+            <p v-show='!isShow'>v-show2</p>
+            <p v-if='isShow'>v-if1</p>
+            <p v-if='!isShow'>v-if2</p>
+            <button v-on:click='changeIsShow'>change isShow</button>
+        </section>
+
+        <section v-show='demoType == 5'>
+            <h1>v-if、v-else-if、v-else</h1>
+            <p v-if='level === 1'>大众会员</p>
+            <p v-else-if='level === 2'>黄金会员</p>
+            <p v-else-if='level === 3'>铂金会员</p>
+            <p v-else-if='level === 4'>钻石会员</p>
+            <p v-else>非法会员</p>
+
+            <div v-show='level === 1'>
+                大众会员权益如下
+                <p>1</p>
+                <p>2</p>
+            </div>
+
+            <div v-show='level === 2'>
+                黄金会员权益如下
+                <p>1</p>
+                <p>21</p>
+                <p>22</p>
+            </div>
+
+            <div v-show='level === 3'>
+                铂金会员权益如下
+                <p>1</p>
+                <p>11</p>
+                <p>21</p>
+                <p>22</p>
+            </div>
+
+            <div v-show='level === 4'>
+                钻石会员权益如下
+                <p>11</p>
+                <p>12</p>
+                <p>13</p>
+                <p>14</p>
+                <p>21</p>
+                <p>22</p>
+                <p>23</p>
+            </div>
+        </section>
+
+        <section v-show='demoType == 6'>
+            <h1>v-for的使用</h1>
+
+            <div>
+                <h3>当接收的是一个数字时：v-for='n in 5' </h3>
+                <ul>
+                    <li v-for='n in 5' :key='n'>
+                        {{ n }}
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>当接收的是一个对象时：(val [,key, index])</h3>
+                <ul>
+                    <li v-for='val in books[0]' :key='val.id'>
+                        {{ val }}
+                    </li>
+                    <li>-------</li>
+                    <li v-for='(val, key) in books[0]' :key='key'>
+                        {{ key }}__{{ val }}
+                    </li>
+                    <li>-------</li>
+                    <li v-for='(val, key, index) in books[0]' :key='index'>
+                        {{ index+1 }}__{{ key }}__{{ val }}
+                    </li>
+
+                </ul>
+            </div>
+
+            <div>
+                <h3>当接收的是一个数组时：(book[, index])</h3>
+                <ul>
+                    <li v-for='book in books' :key='book.id'>
+                        <p>{{ book.name }}:<span v-text='book.price'></span></p>
+                    </li>
+                    <li>--------------------------</li>
+                    <li v-for='(book, index) in books' :key='book.id'>
+                        <p>第{{index + 1}}本__{{ book.name }}:<span v-text='book.price'></span></p>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+
+        <section v-show='demoType == 7'>
+            <h1>v-model and v-on</h1>
+            <div>
+                <div>
+                    <label for="name">员工名字：</label>
+                    <input type="text" v-model.trim.lazy='empolyee.name' name='name' placeholder="请输入名字"  v-on:blur='checkForm("name")' @keyup='checkForm("name")'/>
+                    <span style='color:red;'>{{ formChecker.name }}</span>
+                </div>
+
+                <div>
+                    <label for="age">员工年龄：</label>
+                    <input type="number" v-model.number='empolyee.age' v-on:blur='checkForm("age")' @change='checkForm("age")'  />
+                    <span style='color:red;'>{{ formChecker.age }}</span>
+                </div>
+
+                <div>
+                    <label for="title">员工职位：</label>
+                    <!-- <input type="radio" name="title" id="three" v-model='empolyee.title' value="3" /> <label
+                        for="title">3-SSE</label>
+                    <input type="radio" name="title" id="four" v-model='empolyee.title' value="4" /> <label
+                        for="title">4-TA</label>
+                    <input type="radio" name="title" id="five" v-model='empolyee.title' value="5" /> <label
+                        for="title">5-TL</label>
+                    <input type="radio" name="title" id="six" v-model='empolyee.title' value="6" /> <label
+                        for="title">6-PM</label> -->
+
+                    <span v-for='j in joblevel' :key='j.id'>
+                        <input type='radio' name='title' v-model='empolyee.title' :value='j.level'>
+                        <label for="title">{{ j.level }}-{{ j.desc }}</label>
+                    </span>
+
+                </div>
+
+                <div>
+                        <input type="checkbox" name="partTime" v-model="empolyee.partTime">
+                        <label for="partTime">兼职</label>
+                </div>
+
+                <div>
+                    <label for="hobby">爱好运动</label>
+                    <input type="checkbox" name="hobby" v-model="empolyee.hobby" value="1">  <label for="hobby">乒乓球</label>
+                    <input type="checkbox" name="hobby" v-model="empolyee.hobby" value="2">  <label for="hobby">羽毛球</label>
+                    <input type="checkbox" name="hobby" v-model="empolyee.hobby" value="3">  <label for="hobby">跑步</label>
+                    <input type="checkbox" name="hobby" v-model="empolyee.hobby" value="4">  <label for="hobby">篮球</label>
+
+                </div>
+
+                <div>
+                    <label for="name">部门：</label>
+                    <select v-model="empolyee.bu" v-on:blur="checkForm('bu')" @change='checkForm("bu")' >
+                        <option value="">请选择</option>
+                        <option v-for='b in bus' :value="b.id">{{ b.name }}</option>
+                    </select>
+                    <span style='color:red;'>{{ formChecker.bu }}</span>
+                </div>
+
+                <div>
+                    <label for="name">技能：</label>
+                    <!-- <select v-model="empolyee.skills" multiple style="width: 150px;">
+                        <option>HTML</option>
+                        <option>CSS</option>
+                        <option>JavaScript</option>
+                        <option>C#</option>
+                        <option>Python</option>
+                    </select> -->
+                    <select name="skills"  multiple style="width: 100px;" v-model='empolyee.skills'>
+                        <option :value='s.id' v-for='s in skills' :key='s.id'>
+                            {{ s.skillName }}
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <textarea name="desc"  cols="30" rows="10" placeholder="自我介绍" v-model='empolyee.desc' v-on:blur="checkForm('desc')" @keyup='checkForm("desc")'></textarea>
+                    <span style='color:red;'>{{ formChecker.desc }}</span>
+                </div>
+
+                <div>
+                    <button type="button" v-on:click='submit'>提交</button>
+                </div>
+            </div>
+
+            <div>
+                <p>----------------------------------------------------------------------------------------------------------
+                </p>
+                员工信息：
+                <ul>
+                    <li v-for='(val, key) in empolyee' :key='key'>
+                        {{key}}__{{val}}
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                demoType: 7,
+                message: 'Hello, Vue',
+                htmlMessage: '<h2>2号标题</h2>',
+                vueLogo: {
+                    src: 'https://cn.vuejs.org/images/logo.png',
+                    alt: 'Vue Log'
+                },
+                isDisabled: false,
+                isShow: false,
+                level: 3,
+                books: [
+                    { id: 1, name: 'Html 权威指南', price: 59 },
+                    { id: 2, name: 'Javascript 权威指南', price: 58 },
+                    { id: 3, name: 'CSS 权威指南', price: 60 },
+                    { id: 4, name: '精通Vue Js', price: 61 }
+                ],
+                empolyee: {
+                    name: '',
+                    age: 18,
+                    partTime: true,
+                    hobby: [],
+                    title: '3',
+                    bu: '',
+                    skills: [],
+                    desc: ''
+                },
+                bus: [
+                    { id: 1, name: 'BPO' },
+                    { id: 2, name: 'ITO' }
+                ],
+                joblevel: [
+                    { id: 1, level: '3', desc: 'SSE' },
+                    { id: 2, level: '4', desc: 'TA' },
+                    { id: 3, level: '5', desc: 'TL' },
+                    { id: 4, level: '6', desc: 'PM' }
+                ],
+                skills: [
+                    {id:1, skillName: 'HTML'},
+                    {id:2, skillName: 'CSS'},
+                    {id:3, skillName: 'JavaScript'},
+                    {id:4, skillName: 'C#'},
+                    {id:5, skillName: 'Python'},
+                ],
+                formChecker: {
+                    name:'',
+                    age: '',
+                    bu: '',
+                    desc: ''
+                }
+            },
+            methods: {
+                changeIsShow() {
+                    this.isShow = !this.isShow
+                },
+                checkForm(type){
+                   var checkResult = false 
+                   if(type === 'name' || type === 'all')
+                   {
+                        this.formChecker.name = this.empolyee.name === '' ? 'name不能为空' : ''
+                   }
+                   if(type === 'bu' || type === 'all'){
+                        this.formChecker.bu = this.empolyee.bu === '' ? '请选择BU' : ''                                 
+                   }
+                   if (type === 'desc' || type === 'all') {
+                        this.formChecker.desc = this.empolyee.desc === '' ? '请输入自我介绍' : ''
+                   }
+                   if (type === 'age' || type === 'all') {
+                       this.formChecker.age = (this.empolyee.age < 18 || this.empolyee.age > 65) ? '年龄要在18岁到65岁之间' : ''
+                   }
+                   if(this.formChecker.name === '' && this.formChecker.bu === '' && this.formChecker.desc === '' && this.formChecker.age === '')
+                   {
+                        checkResult = true
+                   }
+                   return checkResult
+                },
+                submit(){
+                    var checkResutlt = this.checkForm('all')
+                    if (!checkResutlt) {
+                        alert('请完成表单数据填写')
+                        return
+                    }
+
+                    console.log(JSON.stringify(this.empolyee))
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
