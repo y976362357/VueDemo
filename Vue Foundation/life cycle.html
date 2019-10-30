@@ -88,13 +88,9 @@
             },
             beforeDestroy(){
                 console.log('beforeDestory called!')
-                console.log(this.$data)  
-                console.log(this.$el)   //不确保DOM加载完成，请使用vm.$nextTick的回调函数做DOM处理
             },
             destroyed(){
                 console.log('destoryed called!')
-                console.log(this.$data)  
-                console.log(this.$el)   //不确保DOM加载完成，请使用vm.$nextTick的回调函数做DOM处理
             }
         })
 

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>computed property</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <header>
+            {{ message }}
+            <p>----------------------</p>
+        </header>
+        <section>
+            已完成的task：
+            <ul>
+                <li v-for='t in completedTasks'>
+                    {{ t.task }}
+                </li>
+            </ul>
+            完成数量：{{ completedTasks.length }}
+            <p>----------------------</p>
+        </section>
+        <section v-if="show">
+            1- {{ nowTime }}-----{{ nowTime }}
+            <p>----------------------</p>
+        </section>
+        <section v-else>
+            2- {{ nowTime }}-----{{ nowTime }}
+            <p>----------------------</p>
+        </section>
+        <section>
+            <p>深圳市南山区,张兰,18236541236</p>
+            <div>
+                <label for="addr">城市：</label>
+                <input type="text" v-model.trim='addr.city'>
+            </div>
+            <div>
+                <label for="addr">姓名：</label>
+                <input type="text" v-model.trim='addr.name'>
+            </div>
+            <div>
+                <label for="addr">电话：</label>
+                <input type="text" v-model.trim='addr.phone'>
+            </div>
+            <div>
+                <label for="addr">详细：</label>
+                <input type="text" v-model.trim='addr.detail'>
+            </div>
+            <div>
+                <label for="addr">智能：</label>
+                <input type="text" v-model.trim='addrAuto'>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                message: 'computed property',
+                show: true,
+                tasks: [
+                    { id: 1, task: '吃早饭', isComplete: true },
+                    { id: 2, task: '看书', isComplete: false },
+                    { id: 3, task: '看电影', isComplete: false },
+                    { id: 4, task: '逛超市', isComplete: false },
+                    { id: 5, task: '充电', isComplete: false },
+                    { id: 6, task: '睡觉', isComplete: true },
+                ],
+                addr: {
+                    name: '',
+                    phone: '',
+                    city: '',
+                    detail: ''
+                }
+            },
+            computed: {
+                completedTasks() {
+                    console.log('获取数据')
+                    return this.tasks.filter(t => t.isComplete)
+                },
+                nowTime() {
+                    console.log('获取时间')
+                    return new Date()
+                },
+                addrAuto: {
+                    get() {
+                        return this.addr.city  + this.addr.name  + this.addr.phone;
+                    },
+                    set(value) {
+                        let vals = value.split(',')
+                        // console.log(vals)
+                        this.addr.city = vals[0] || ''
+                        this.addr.name = vals[1] || ''
+                        this.addr.phone = vals[2] || ''
+                    }
+                }
+            }
+
+        })
+
+    </script>
+</body>
+
+</html>

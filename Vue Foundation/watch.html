@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>watch</title>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            {{ message }}----  {{ message.split('').reverse().join('') }}
+        </header>
+        <section>
+            <p>深圳市南山区,张兰,18236541236</p>
+            <div>
+                <label for="addr">城市：</label>
+                <input type="text" v-model.trim='addr.city'>
+            </div>
+            <div>
+                <label for="addr">姓名：</label>
+                <input type="text" v-model.trim='addr.name'>
+            </div>
+            <div>
+                <label for="addr">电话：</label>
+                <input type="text" v-model.trim='addr.phone'>
+            </div>
+            <div>
+                <label for="addr">详细：</label>
+                <input type="text" v-model.trim='addr.detail'>
+            </div>
+            <div>
+                <label for="addr">智能：</label>
+                <input type="text" v-model.trim='addrAuto'>
+            </div>
+            <div>
+                <p v-if='oldAddrAuto'>
+                    2s前的内容： {{ oldAddrAuto }}
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <input type="text" v-model="inputValue">
+            <p>Two seconds ago, the input said "{{ oldInputValue }}".</p>
+        </section>
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                message: 'A watch',
+                addr: {
+                    name: '',
+                    phone: '',
+                    city: '',
+                    detail: ''
+                },
+                addrAuto: '',
+                oldAddrAuto: '',
+                inputValue: '',
+                oldInputValue: ''
+
+            },
+            computed: {
+
+            },
+            watch: {
+                addrAuto(newVal, oldValue) {
+                    let vals = newVal.split(',')
+                    // console.log(vals)
+                    this.addr.city = vals[0] || ''
+                    this.addr.name = vals[1] || ''
+                    this.addr.phone = vals[2] || ''
+
+                    setTimeout(() => {
+                        this.oldAddrAuto = newVal
+                    }, 2000)
+                },
+                inputValue() {
+                    const newValue = this.inputValue;
+                    setTimeout(() => {
+                        this.oldInputValue = newValue;
+                    }, 2000);
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

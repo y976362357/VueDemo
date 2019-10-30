@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Filter</title>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <p>{{ message }}</p>
+        </header>
+
+        <section>
+            <ul>
+                <li v-for='p in books' :key='p.id'>{{ p.name }}--{{ p.price }}</li>
+            </ul>
+        </section>
+        <section>
+            <ul>
+                <li v-for='p in books' :key='p.id'>{{ p.name }}--{{ p.price.toFixed(2) }}</li>
+            </ul>
+        </section>
+        <section>
+            <ul>
+                <li v-for='p in books' :key='p.id'>{{ p.name | capitalize }}--{{ toFixed(p.price, 2) }}</li>
+            </ul>
+        </section>
+        <section>
+            <ul>
+                <li v-for='p in books' :key='p.id'>{{ p.name | capitalize | advancedBook }}--{{ p.price |　currency('￥', 2) }}</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        // Vue.filter('capitalize', function (value) {
+        //     if (!value) return ''
+        //     value = value.toString()
+        //     return value.charAt(0).toUpperCase() + value.slice(1)
+        // })
+
+        Vue.filter('currency', function (value, currency, fix) {
+            //检查是否是number
+            let newValue = parseFloat(value).toFixed(fix)
+            return newValue + ' ' + currency
+        })
+
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                message: 'filter',
+                books: [
+                    { id: 1, name: 'HTML 权威指南', price: 50.9881 },
+                    { id: 2, name: 'CSS 权威指南', price: 59.9881 },
+                    { id: 3, name: 'javaScript 权威指南', price: 52.9881 },
+                    { id: 4, name: 'c# 7.0 核心指南', price: 54.9881 }
+                ]
+            },
+            methods: {
+                toFixed(number, fix) {
+                    return number.toFixed(fix)
+                }
+            },
+            filters: {
+                capitalize(value) {
+                    if (!value) return ''
+                    value = value.toString()
+                    return value.charAt(0).toUpperCase() + value.slice(1)
+                },
+                advancedBook(value){
+                    if (!value) return ''
+                    if(value.endsWith('权威指南')){
+                        value = value.concat('--权威书籍--推荐')
+                    }
+
+                    return value
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>
