@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Instance Property</title>
+</head>
+
+<body>
+    <div id="app" data-demo='test'>
+        <header>
+            {{ message }}
+        </header>
+
+        <section>
+            <customer-button :color='button.bgColor' :button-name='button.buttonName'>
+
+            </customer-button>
+            <customer-button :color='button.bgColor' :button-name='button.buttonName'>
+
+            </customer-button>
+
+        </section>
+        <section>
+
+        </section>
+    </div>
+
+    <div id="app2">
+        <p>-------------------------------------------------------------------------</p>
+        {{ message }}
+        <div>
+            <button @click="handle(new Date())">
+                通过$emit触发自定义事件
+            </button>
+        </div>
+
+        <div ref="leftMenu">
+            test
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+
+        Vue.component(
+            'customer-button', {
+            props: ['color', 'buttonName'],
+            data() {
+                return {
+                    createdDateTime: new Date(),
+                    style: {
+                        backgroundColor: this.color
+                    }
+                }
+            },
+            template: `<div>
+                            <button :style="style" >{{ style }}</button>
+                        </div>`,
+            beforeCreate() {
+                // console.log(this.$data, this.$props, 'a')  //无法获取$data和$props的值
+            },
+            created() {
+                console.log('begin button component created')
+                console.log(this.createdDateTime)
+                console.log(this.$data, this.$props, 'b')
+                console.log(this.$props)
+                console.log('父实例', this.$parent)
+                console.log('end button component created')
+            }
+        }
+        )
+
+
+        let vm = new Vue({
+            customerOption: {
+                lang: 'cn'
+            },
+            apiOption: {
+                apiVersion: 'v1'
+            },
+            el: '#app',
+            data: {
+                message: 'Vue Instance Property',
+                button: {
+                    bgColor: 'red',
+                    buttonName: 'test'
+                }
+            },
+            created() {
+                console.log('begin root created')
+                console.log(this.$data)   //Vue 实例观察的数据对象。Vue 实例代理了对其 data 对象属性的访问。
+                console.log(this.$options.customerOption.lang)  //非保留的属性值，都会加入到$options属性中
+                console.log(this.$options.apiOption.apiVersion)  //非保留的属性值，都会加入到$options属性中
+                console.log('end root created')
+            },
+            mounted() {
+                console.log('begin root mounted')
+                console.log(this.$el)  //通过Vue实例上的$el获取原生的DOM元素
+                console.log('html上的自定义data属性:', this.$el.getAttribute('data-demo'))
+                console.log(this.$children)
+                console.log('end root mounted')
+            }
+        })
+
+
+
+        let vm2 = new Vue({
+            el: '#app2',
+            data: { message: 'Child?' },
+            parent: vm,
+            methods: {
+                handle(message) {
+                    this.$emit('onVm2Click', message)  //在Vue实例上触发自定义事件
+                    this.$emit('onVm2ClickOnce', message)  
+                }
+            },
+            created() {
+
+            },
+            mounted() {
+                // console.log(this.$refs.leftMenu)
+                // var test = this.$refs.leftMenu.innerText;
+                // console.log('Left Menu', test)
+                // this.$refs.leftMenu.innerText = 'menu list'
+
+                this.$nextTick(function () {
+                    console.log(this.$refs.leftMenu)
+                    var test = this.$refs.leftMenu.innerText;
+                    console.log('Left Menu', test)
+                    this.$refs.leftMenu.innerText = 'menu list'
+                })
+            }
+        })
+
+        //在Vue实例中定义自定义事件
+        vm2.$on('onVm2Click', function (message) {
+            console.log('onVm2Click', message)
+        })
+
+
+        vm2.$once('onVm2ClickOnce', function (message) {
+            console.log('onVm2ClickOnce', message)
+        })
+
+    </script>
+</body>
+
+</html>
