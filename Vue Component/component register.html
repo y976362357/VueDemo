@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Component Register</title>
+</head>
+<body>
+    
+    <div id="app">
+        <header>
+            <p>{{ message }}</p>
+        </header>
+        <section>
+            <custom-button></custom-button>
+        </section>
+    </div>
+    
+    <div id="app2">
+        <customs-button>test</customs-button>
+    </div>
+    
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+
+    <script>
+        const CustomButton = {
+            template: '<button>Custom button</button>'
+        }
+
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                message: 'Component Register'
+            },
+            //局部注册
+            components: {
+                CustomButton
+            }                        
+        })
+
+        //全局注册
+        Vue.component('customs-button',{
+              template: '<button>customs button</button>'
+        })
+        let vm2 = new Vue({
+            el: '#app2'
+        })
+    </script>
+</body>
+</html>
