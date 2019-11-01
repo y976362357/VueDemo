@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>pass data into component</title>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            {{ message }}
+        </header>
+
+        <section>
+            <button-counter title='第一个按钮'></button-counter>
+            <button-counter :title='buttonName'></button-counter>
+        </section>
+    </div>
+
+
+    <div id="app1">
+        <header>
+            {{ message }}
+        </header>
+
+        <section>
+            <p>profile component</p>
+            <profile name='A' :age=18 ></profile>
+
+            <p>advanced component(display toby)</p>
+            <advanced-profile :employee='toby'></advanced-profile>
+
+            <p>validate component </p>
+            <validate-profile name='A' :age=18 ></validate-profile>
+            <p>validate component with validator function</p>
+            <validate-profile name='B' :age=18 :level='5'></validate-profile>
+         
+        </section>
+    </div>
+
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+
+    <script>
+
+        // 定义一个名为 button-counter 的新组件
+        //组件是可复用的Vue实例
+        //组件的data选项必须是一个函数
+        Vue.component('button-counter', {
+            props: ['title'],
+            data: function () {
+                return {
+                    count: 0
+                }
+            },
+            template: '<button v-on:click="count++">{{ title }}</button>'
+        })
+
+        Vue.component('profile',{
+            props:['name', 'age', 'level'],
+            template: `
+                <div>
+                    <p> {{ name }} </p>
+                    <p> {{ age }} </p>
+                    <p> {{ level }} </p>
+                </div>
+            `
+
+        })
+
+        Vue.component('advancedProfile',{
+            props:['employee'],
+            template: `
+                <div>
+                    <p> {{ employee.name }} </p>
+                    <p> {{ employee.age }} </p>
+                    <p> {{ employee.level }} </p>
+                </div>
+            `
+
+        })
+
+        Vue.component('validateProfile',{
+            props:{
+                name: String,
+                age: {
+                    type: Number,
+                    required: false,
+                    validator(value){
+                        return value >= 18 && value <= 65
+                    }
+                },
+                level: {
+                    type: Number,
+                    requred: true,
+                    default: 3
+                }
+            },
+            template: `
+                <div>
+                    <p> {{ name }} </p>
+                    <p> {{ age }} </p>
+                    <p> {{ level }} </p>
+                </div>
+            `
+
+        })
+
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                message: 'Pass Data into component',
+                buttonName: '按钮名称'
+            }
+        })
+
+        let vm2 = new Vue({
+            el: '#app1',
+            data: {
+                message: 'Pass Data into component validate',
+                toby: {
+                    name: 'Toby',
+                    age: 29,
+                    level : 4
+                }
+            },
+            created(){
+                // setInterval(() =>{
+                //     this.toby.age++
+                // }, 2000)
+            }
+        })
+
+    </script>
+</body>
+
+</html>
