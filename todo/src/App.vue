@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p>
+      This is Vue.js component, which contains Html content that will be display to the user, the javascript code 
+      required by the Html, and the CSS that styles the elements.
+    </p>
+    <HelloWorld msg="A msg from parent component"/>
+    <h1>The content in App.Vue</h1>
   </div>
 </template>
 
