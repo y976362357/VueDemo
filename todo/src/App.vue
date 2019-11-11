@@ -18,6 +18,7 @@
           {{ t.action }}
         </div>
         <div class="col-2">
+          <input type="checkbox" name="" v-model="t.done" class="form-check-input">
           {{ t.done }}
         </div>
       </div>
@@ -35,7 +36,7 @@ export default {
       tasks: [
         {action: 'Buy book', done: false},
         {action: 'Exercise Sql basic', done: false},
-        {action: 'Write Some Vue Demo', done: false},
+        {action: 'Write Some Vue Demo', done: true},
         {action: 'Call Toby', done: false},
       ]
     }
